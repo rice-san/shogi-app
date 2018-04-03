@@ -9,77 +9,206 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
-    
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
-    
+func rowToNumericalIndex(row: Character) -> Int  {
+	switch row {
+	case "a":
+		return 1
+	case "b":
+		return 2
+	case "c":
+		return 3
+	case "d":
+		return 4
+	case "e":
+		return 5
+	case "f":
+		return 6
+	case "g":
+		return 7
+	case "h":
+		return 8
+	case "i":
+		return 9
+	default:
+		return 1
+	}
+}
+
+func numericalIndexToRow(index: Int) -> Character  {
+	switch index {
+	case 1:
+		return "a"
+	case 2:
+		return "b"
+	case 3:
+		return "c"
+	case 4:
+		return "d"
+	case 5:
+		return "e"
+	case 6:
+		return "f"
+	case 7:
+		return "g"
+	case 8:
+		return "h"
+	case 9:
+		return "i"
+	default:
+		return "a"
+	}
+}
+
+class GamePiece: SKSpriteNode {
+	enum type {
+		case king
+		case rook
+		case bishop
+		case gold
+		case silver
+		case knight
+		case lance
+		case pawn
+	}
+	enum color {
+		case black
+		case white
+	}
+	var promoted = false
+	weak var parentTile: BoardTile?
+}
+
+// A type to represent indivual tiles on the game board
+class BoardTile : SKSpriteNode {
+	var currentPiece: GamePiece?
+}
+
+// A type to represent the game board as a whole
+class BoardScene: SKScene {
+	
+	var heldPiece: GamePiece?
+	var currentTile: BoardTile?
+	var prevColor = UIColor.black
+	
+	var tiles = Array<Array<BoardTile?>>(repeating: Array<BoardTile?>(repeating: nil, count: 9), count: 9)
+	
+	// Function to convert tile names to tile indexes in the tiles array
+	func getTile(withIndex: String) -> BoardTile? {
+		if withIndex.count != 2 {
+			return nil
+		}
+		let column = Int("\(withIndex.first!)")!
+		let row = rowToNumericalIndex(row: withIndex.last!)
+		return tiles[column][row]
+	}
+	
+	
     override func didMove(to view: SKView) {
-        
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
+		// Identify all tiles and populate tile table
+		
     }
+	
+	override func sceneDidLoad() {
+		for row in 0...8 {
+			for column in 0...8 {
+				print("\(column+1)\(numericalIndexToRow(index: row+1))")
+				let tile = self.childNode(withName: "//\(column+1)\(numericalIndexToRow(index: row+1))") as! BoardTile
+				self.tiles[column][row] = tile
+				print(self.tiles[column][row]!.name!)
+			}
+		}
+		// Temporary thing-a-maboby for testing
+		let aPiece = self.childNode(withName: "//king") as! GamePiece
+		self.tiles[1][1]?.currentPiece = aPiece
+		aPiece.parentTile = self.tiles[1][1]
+		
+		let bPiece = self.childNode(withName: "//gold") as! GamePiece
+		self.tiles[2][2]?.currentPiece = bPiece
+		bPiece.parentTile = self.tiles[2][2]
+	}
     
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
+		
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+		
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+		
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
-        
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+		if self.currentTile != nil {
+			self.currentTile!.color = self.prevColor
+			self.currentTile = nil
+		}
+		let touch = touches.first!
+		let positionInScene = touch.location(in: self)
+		let touchedNode = self.atPoint(positionInScene)
+		
+		
+		if let name = touchedNode.name
+		{
+			print("Touched \(name)")
+			if let node = touchedNode as? BoardTile {
+				// Touched piece indirectly (or just tile)
+				print("Got a board tile")
+				self.currentTile = node
+				self.prevColor = node.color
+				node.color = UIColor.darkGray
+				if node.currentPiece != nil {
+					self.heldPiece = node.currentPiece
+					node.currentPiece = nil
+					heldPiece?.parentTile = nil
+				}
+			}else if let node = touchedNode as? GamePiece {
+				// Touched piece directly
+				print("Got a piece")
+				if let tile = node.parentTile {
+					print("Has a parentTile")
+					self.currentTile = tile
+					self.prevColor = tile.color
+					tile.color = UIColor.darkGray
+					self.heldPiece = node
+					tile.currentPiece = nil
+					heldPiece!.parentTile = nil
+					node.parentTile = nil
+				}
+			}
+		}
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+		let touch = touches.first!
+		let positionInScene = touch.location(in: self)
+		if self.heldPiece != nil {
+			heldPiece?.position = positionInScene
+		}
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+		if self.currentTile != nil {
+			self.currentTile!.color = self.prevColor
+			self.currentTile = nil
+		}
+		if self.heldPiece != nil {
+			let nodes = self.nodes(at: self.heldPiece!.position)
+			for node in nodes {
+				if let boardPos = node as? BoardTile {
+					boardPos.currentPiece = self.heldPiece
+					self.heldPiece?.parentTile = boardPos
+					self.heldPiece!.position = boardPos.position
+					self.heldPiece = nil
+				}
+			}
+		}
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+        
     }
     
     
