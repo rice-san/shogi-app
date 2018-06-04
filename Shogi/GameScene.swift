@@ -9,6 +9,8 @@
 import SpriteKit
 import GameplayKit
 
+// All board indexes (tuples) are of the ordered pair (column, row) or (x, y) and these orignate with 1,1 as the upper right corner
+
 func rowToNumericalIndex(row: Character) -> Int  {
 	switch row {
 	case "a":
@@ -59,36 +61,32 @@ func numericalIndexToRow(index: Int) -> Character  {
 	}
 }
 
-class GamePiece: SKSpriteNode {
-	enum type {
-		case king
-		case rook
-		case bishop
-		case gold
-		case silver
-		case knight
-		case lance
-		case pawn
-	}
-	enum color {
-		case black
-		case white
-	}
-	var promoted = false
-	weak var parentTile: BoardTile?
-}
-
 // A type to represent indivual tiles on the game board
 class BoardTile : SKSpriteNode {
 	var currentPiece: GamePiece?
+	func toNumericRepresentation() -> (Int, Int) {
+		if let tileIndex = self.name {
+			if self.name!.count != 2 {
+				print("Error: Invalid name")
+				return (-1,-1) // The code is broken so return an invalid tile
+			} else {
+				let column = Int("\(tileIndex.first!)")!
+				let row = rowToNumericalIndex(row: tileIndex.last!)
+				return (column, row)
+			}
+		}
+		return (-1, -1) // It should never get here
+	}
 }
 
 // A type to represent the game board as a whole
 class BoardScene: SKScene {
+	var gameStarted = false
 	
 	var heldPiece: GamePiece?
 	var currentTile: BoardTile?
 	var prevColor = UIColor.black
+	var lastPosition = (0,0)
 	
 	var tiles = Array<Array<BoardTile?>>(repeating: Array<BoardTile?>(repeating: nil, count: 9), count: 9)
 	
@@ -119,12 +117,12 @@ class BoardScene: SKScene {
 		}
 		// Temporary thing-a-maboby for testing
 		let aPiece = self.childNode(withName: "//king") as! GamePiece
-		self.tiles[1][1]?.currentPiece = aPiece
-		aPiece.parentTile = self.tiles[1][1]
+		aPiece.pieceType = .king
+		aPiece.placePiece(atLocation: "1a", onBoard: self)
 		
 		let bPiece = self.childNode(withName: "//gold") as! GamePiece
-		self.tiles[2][2]?.currentPiece = bPiece
-		bPiece.parentTile = self.tiles[2][2]
+		bPiece.pieceType = .gold
+		bPiece.placePiece(atLocation: "2b", onBoard: self)
 	}
     
     
@@ -150,6 +148,7 @@ class BoardScene: SKScene {
 		let touchedNode = self.atPoint(positionInScene)
 		
 		
+		
 		if let name = touchedNode.name
 		{
 			print("Touched \(name)")
@@ -160,6 +159,7 @@ class BoardScene: SKScene {
 				self.prevColor = node.color
 				node.color = UIColor.darkGray
 				if node.currentPiece != nil {
+					self.lastPosition = node.toNumericRepresentation()
 					self.heldPiece = node.currentPiece
 					node.currentPiece = nil
 					heldPiece?.parentTile = nil
@@ -169,6 +169,7 @@ class BoardScene: SKScene {
 				print("Got a piece")
 				if let tile = node.parentTile {
 					print("Has a parentTile")
+					self.lastPosition = tile.toNumericRepresentation()
 					self.currentTile = tile
 					self.prevColor = tile.color
 					tile.color = UIColor.darkGray
@@ -198,9 +199,7 @@ class BoardScene: SKScene {
 			let nodes = self.nodes(at: self.heldPiece!.position)
 			for node in nodes {
 				if let boardPos = node as? BoardTile {
-					boardPos.currentPiece = self.heldPiece
-					self.heldPiece?.parentTile = boardPos
-					self.heldPiece!.position = boardPos.position
+					self.heldPiece?.placePiece(atLocation: boardPos.name!)
 					self.heldPiece = nil
 				}
 			}

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		985A803B20C4C00E00E5E7D6 /* GamePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985A803A20C4C00E00E5E7D6 /* GamePiece.swift */; };
 		98D31AAC20671EBA004B15C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D31AAB20671EBA004B15C1 /* AppDelegate.swift */; };
 		98D31AAE20671EBA004B15C1 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 98D31AAD20671EBA004B15C1 /* GameScene.sks */; };
 		98D31AB020671EBA004B15C1 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 98D31AAF20671EBA004B15C1 /* Actions.sks */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		985A803A20C4C00E00E5E7D6 /* GamePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePiece.swift; sourceTree = "<group>"; };
 		98D31AA820671EB9004B15C1 /* Shogi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shogi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98D31AAB20671EBA004B15C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98D31AAD20671EBA004B15C1 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				98D31AAD20671EBA004B15C1 /* GameScene.sks */,
 				98D31AAF20671EBA004B15C1 /* Actions.sks */,
 				98D31AB120671EBA004B15C1 /* GameScene.swift */,
+				985A803A20C4C00E00E5E7D6 /* GamePiece.swift */,
 				98D31AB320671EBA004B15C1 /* GameViewController.swift */,
 				98D31AB520671EBA004B15C1 /* Main.storyboard */,
 				98D31AB820671EBA004B15C1 /* Assets.xcassets */,
@@ -197,7 +200,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Royston Martha";
 				TargetAttributes = {
 					98D31AA720671EB9004B15C1 = {
@@ -272,6 +275,7 @@
 			files = (
 				98D31AB220671EBA004B15C1 /* GameScene.swift in Sources */,
 				98D31AB420671EBA004B15C1 /* GameViewController.swift in Sources */,
+				985A803B20C4C00E00E5E7D6 /* GamePiece.swift in Sources */,
 				98D31AAC20671EBA004B15C1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,6 +345,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -348,6 +353,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -398,6 +404,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -405,6 +412,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
