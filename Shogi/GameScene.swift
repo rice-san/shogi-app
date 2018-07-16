@@ -9,6 +9,36 @@
 import SpriteKit
 import GameplayKit
 
+// An array of all placeable pieces.
+
+var piecePlaced = ["king1": false, "king2": false,] // TODO: finish list
+
+// A function to collect a free piece from the pre-game board
+func collectPiece(type: String) -> GamePiece {
+	switch type {
+	case "king":
+		for var num in 1...2 {
+			if
+		}
+	case "rook":
+		
+	case "knight":
+		
+	case "bishop":
+		
+	case "lance":
+		
+	case "gold":
+		
+	case "silver":
+		
+	case "pawn":
+		
+	default:
+		
+	}
+}
+
 // All board indexes (tuples) are of the ordered pair (column, row) or (x, y) and these orignate with 1,1 as the upper right corner
 
 func rowToNumericalIndex(row: Character) -> Int  {
@@ -85,6 +115,7 @@ class BoardScene: SKScene {
 	
 	var heldPiece: GamePiece?
 	var currentTile: BoardTile?
+	var bottomColor = GamePiece.color.black
 	var prevColor = UIColor.black
 	var lastPosition = (0,0)
 	
@@ -100,11 +131,27 @@ class BoardScene: SKScene {
 		return tiles[column][row]
 	}
 	
+	func autoSetBottomPieces(asColor: GamePiece.color) {
+		
+	}
+	
+	func autoSetTopPieces(asColor: GamePiece.color) {
+		
+	}
+	
+	func autoSetBoardPieces() {
+		var aPiece = self.childNode(withName: "//king1") as! GamePiece
+		aPiece.pieceType = .king
+		aPiece.pieceColor = .white
+		aPiece.pieceOrientation = .backward
+		aPiece.placePiece(atLocation: "5a", onBoard: self)
+	}
 	
     override func didMove(to view: SKView) {
 		// Identify all tiles and populate tile table
 		
     }
+	
 	
 	override func sceneDidLoad() {
 		for row in 0...8 {
